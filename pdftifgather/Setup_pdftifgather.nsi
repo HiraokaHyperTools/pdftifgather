@@ -8,7 +8,8 @@
 ;--------------------------------
 
 !define APP "pdftifgather"
-!define VER "0.1"
+!system 'DefineAsmVer.exe "bin\x86\DEBUG\${APP}.exe" "!define VER ""[SVER]"" " > Tmpver.nsh'
+!include "Tmpver.nsh"
 
 ; The name of the installer
 Name "${APP} ${VER}"

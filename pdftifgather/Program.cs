@@ -15,6 +15,16 @@ namespace pdftifgather {
             }
             try {
                 String fpout = args[0];
+                if (fpout == "/GPC" && args.Length >= 2) {
+                    try {
+                        Environment.ExitCode = ReaderFactory.Create(args[1]).NumberOfPages;
+                    }
+                    catch (Exception err) {
+                        Console.Error.WriteLine("" + err);
+                        Environment.ExitCode = -1;
+                    }
+                    return;
+                }
                 using (var writer = WriterFactory.Create(fpout)) {
                     int x = 1, cx = args.Length;
                     while (x < cx) {
@@ -85,6 +95,8 @@ namespace pdftifgather {
             Console.Error.WriteLine("pdftifgather out.tif ( in.tif 1- )");
             Console.Error.WriteLine("pdftifgather out.tif ( in.tif 2-3 )");
             Console.Error.WriteLine("pdftifgather out.tif ( in.tif 4- )");
+            Console.Error.WriteLine("pdftifgather /GPC in.pdf ");
+            Console.Error.WriteLine("pdftifgather /GPC in.tif ");
         }
 
         class ReaderFactory {

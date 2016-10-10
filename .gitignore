@@ -251,3 +251,4 @@ paket-files/
 .idea/
 *.sln.iml
 /pdftifgather/Setup_pdftifgather.exe
+/pdftifgather/Tmpver.nsh
