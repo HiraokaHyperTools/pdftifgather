@@ -7,5 +7,7 @@ PDF/TIFF gather (GPLv3)
 	pdftifgather out.tif ( in.tif 1- )
 	pdftifgather out.tif ( in.tif 2-3 )
 	pdftifgather out.tif ( in.tif 4- )
+	pdftifgather /GPC in.tif → %ERRORLEVEL%
+	pdftifgather /GPC in.pdf → %ERRORLEVEL%
 
 * Requires .NET Framework 4.0 or later
