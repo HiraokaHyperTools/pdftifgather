@@ -43,28 +43,18 @@ namespace pdftifgather {
                             Match M;
                             Range range;
                             if (false) { }
-                            else if ((M = Regex.Match(args[x], "^(?<a>\\d+)\\-(?<b>\\d+)$")).Success) {
+                            else if ((M = Regex.Match(args[x], "^((?<a>\\d+)-?|-(?<b>\\d+)|(?<a>\\d+)-(?<b>\\d+))(?<c>l|r|d|left|right|down)?$", RegexOptions.IgnoreCase)).Success) {
                                 range = new Range {
-                                    first = Convert.ToInt32(M.Groups["a"].Value),
-                                    last = Convert.ToInt32(M.Groups["b"].Value),
-                                };
-                            }
-                            else if ((M = Regex.Match(args[x], "^(?<a>\\d+)\\-$")).Success) {
-                                range = new Range {
-                                    first = Convert.ToInt32(M.Groups["a"].Value),
-                                    last = int.MaxValue,
-                                };
-                            }
-                            else if ((M = Regex.Match(args[x], "^\\-(?<b>\\d+)$")).Success) {
-                                range = new Range {
-                                    first = 1,
-                                    last = Convert.ToInt32(M.Groups["b"].Value),
+                                    first = M.Groups["a"].Success ? Convert.ToInt32(M.Groups["a"].Value) : 1,
+                                    last = M.Groups["b"].Success ? Convert.ToInt32(M.Groups["b"].Value) : int.MaxValue,
+                                    rot = M.Groups["c"].Value,
                                 };
                             }
                             else if (int.TryParse(args[x], out pi)) {
                                 range = new Range {
                                     first = pi,
                                     last = pi,
+                                    rot = "",
                                 };
                             }
                             else {
@@ -92,6 +82,7 @@ namespace pdftifgather {
             Console.Error.WriteLine("pdftifgather out.pdf in1.pdf in2.pdf in3.pdf");
             Console.Error.WriteLine("pdftifgather out.pdf ( in-even.pdf 2 4 6 ) ( in-odd.pdf 1 3 5 )");
             Console.Error.WriteLine("pdftifgather out.tif ( in-even.tif 2 4 6 ) ( in-odd.tif 1 3 5 )");
+            Console.Error.WriteLine("pdftifgather out.tif ( in.tif 1L 1Left 1R 1Right 1D 1Down )");
             Console.Error.WriteLine("pdftifgather out.tif ( in.tif 1- )");
             Console.Error.WriteLine("pdftifgather out.tif ( in.tif 2-3 )");
             Console.Error.WriteLine("pdftifgather out.tif ( in.tif 4- )");
@@ -140,6 +131,26 @@ namespace pdftifgather {
         /// 1- ... int.MaxValue
         /// </summary>
         public int last { get; set; }
+
+        /// <summary>
+        /// l,r,d
+        /// </summary>
+        public string rot { get; set; }
+
+        /// <summary>
+        /// 右回転の度数
+        /// 0,90,180,270 のいずれか
+        /// </summary>
+        public int rotAngle {
+            get {
+                switch (char.ToLowerInvariant((rot + " ")[0])) {
+                    case 'l': return 270;
+                    case 'r': return 90;
+                    case 'd': return 180;
+                }
+                return 0;
+            }
+        }
     }
 
     public interface IRangesWriter : IDisposable {

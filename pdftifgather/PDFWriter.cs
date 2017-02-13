@@ -59,6 +59,10 @@ namespace pdftifgather {
                     }
 
                     if (pdfPageReader != null) {
+                        // http://stackoverflow.com/a/6155962
+                        int rot = pdfPageReader.reader.GetPageRotation(y);
+                        var pageDict = pdfPageReader.reader.GetPageN(y);
+                        pageDict.Put(PdfName.ROTATE, new PdfNumber((rot + range.rotAngle) % 360));
                         PdfImportedPage page = copy.GetImportedPage(pdfPageReader.reader, y);
                         copy.AddPage(page);
                     }
@@ -69,7 +73,7 @@ namespace pdftifgather {
                             try {
                                 Document localDoc = new Document();
                                 MemoryStream localStream = new MemoryStream();
-                                PdfWriter localWriter = PdfWriter.GetInstance(localDoc, new Onlyrw(localStream));
+                                PdfWriter localWriter = PdfWriter.GetInstance(localDoc, new NoclosePassthru(localStream));
 
                                 var pdfPageSize = document.PageSize;
 
@@ -86,6 +90,10 @@ namespace pdftifgather {
                                 localStream.Position = 0;
 
                                 PdfReader localReader = new PdfReader(localStream);
+
+                                var pageDict = localReader.GetPageN(y);
+                                pageDict.Put(PdfName.ROTATE, new PdfNumber(range.rotAngle % 360));
+                                
                                 PdfImportedPage page = copy.GetImportedPage(localReader, 1);
                                 copy.AddPage(page);
 
@@ -105,8 +113,8 @@ namespace pdftifgather {
             }
         }
 
-        class Onlyrw : Stream {
-            public Onlyrw(Stream baseStream) {
+        class NoclosePassthru : Stream {
+            public NoclosePassthru(Stream baseStream) {
                 this.baseStream = baseStream;
             }
 

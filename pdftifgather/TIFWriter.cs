@@ -39,8 +39,9 @@ namespace pdftifgather {
                 for (int y = range.first; y <= range.last && y <= reader.NumberOfPages; y++) {
                     if (tifPageReader != null) {
                         var dib = FreeImage.LockPage(tifPageReader.tifIn, y - 1);
+                        var dibRot = FreeImage.Rotate(dib, -range.rotAngle);
                         try {
-                            FreeImage.AppendPage(tifOut, dib);
+                            FreeImage.AppendPage(tifOut, dibRot);
                         }
                         finally {
                             FreeImage.UnlockPage(tifPageReader.tifIn, dib, false);
@@ -66,8 +67,9 @@ namespace pdftifgather {
                         }
 
                         var dib = FreeImage.Load(FREE_IMAGE_FORMAT.FIF_PNG, fpTmp + ".png", FREE_IMAGE_LOAD_FLAGS.DEFAULT);
+                        var dibRot = FreeImage.Rotate(dib, -range.rotAngle);
                         try {
-                            FreeImage.AppendPage(tifOut, dib);
+                            FreeImage.AppendPage(tifOut, dibRot);
                         }
                         finally {
                             FreeImage.UnloadEx(ref dib);

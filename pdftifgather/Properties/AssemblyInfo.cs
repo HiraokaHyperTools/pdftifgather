@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("HIRAOKA HYPERS TOOLS, Inc.")]
 [assembly: AssemblyProduct("pdftifgather")]
-[assembly: AssemblyCopyright("Copyright (c) 2016")]
+[assembly: AssemblyCopyright("Copyright (c) 2016,2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // すべての値を指定するか、下のように '*' を使ってビルドおよびリビジョン番号を 
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly:     AssemblyVersion("0.2")] //here
-[assembly: AssemblyFileVersion("0.2")] //here
+[assembly:     AssemblyVersion("0.3")] //here
+[assembly: AssemblyFileVersion("0.3")] //here
