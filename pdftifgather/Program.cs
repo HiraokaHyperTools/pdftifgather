@@ -25,51 +25,11 @@ namespace pdftifgather {
                     }
                     return;
                 }
-                using (var writer = WriterFactory.Create(fpout)) {
-                    int x = 1, cx = args.Length;
-                    while (x < cx) {
-                        if (args[x] != "(") {
-                            String fpinEntire = args[x];
-                            writer.AddRanges(ReaderFactory.Create(fpinEntire), new Range[] { new Range { first = 1, last = int.MaxValue } });
-                            x++;
-                            continue;
-                        }
-                        x++;
-                        String fpin = args[x];
-                        x++;
-                        List<Range> ranges = new List<Range>();
-                        while (args[x] != ")") {
-                            int pi;
-                            Match M;
-                            Range range;
-                            if (false) { }
-                            else if ((M = Regex.Match(args[x], "^((?<a>\\d+)-?|-(?<b>\\d+)|(?<a>\\d+)-(?<b>\\d+))(?<c>l|r|d|left|right|down)?$", RegexOptions.IgnoreCase)).Success) {
-                                range = new Range {
-                                    first = M.Groups["a"].Success ? Convert.ToInt32(M.Groups["a"].Value) : 1,
-                                    last = M.Groups["b"].Success ? Convert.ToInt32(M.Groups["b"].Value) : int.MaxValue,
-                                    rot = M.Groups["c"].Value,
-                                };
-                            }
-                            else if (int.TryParse(args[x], out pi)) {
-                                range = new Range {
-                                    first = pi,
-                                    last = pi,
-                                    rot = "",
-                                };
-                            }
-                            else {
-                                x++;
-                                continue;
-                            }
-
-                            ranges.Add(range);
-                            x++;
-                        }
-
-                        writer.AddRanges(ReaderFactory.Create(fpin), ranges);
-
-                        x++; // ")"
-                    }
+                else if (fpout == "/v0.4") {
+                    new Program().Run(args, 1);
+                }
+                else {
+                    new Program().Run(args, 0);
                 }
             }
             catch (Exception err) {
@@ -78,11 +38,74 @@ namespace pdftifgather {
             }
         }
 
+        void Run(string[] args, int nextArg) {
+            string fpout = args[nextArg];
+            nextArg++;
+            using (var writer = WriterFactory.Create(fpout)) {
+                int cx = args.Length;
+                while (nextArg < cx) {
+                    if (args[nextArg] != "(") {
+                        String fpinEntire = args[nextArg];
+                        writer.AddRanges(ReaderFactory.Create(fpinEntire), new Range[] { new Range { first = 1, last = int.MaxValue } });
+                        nextArg++;
+                        continue;
+                    }
+                    nextArg++;
+                    String fpin = args[nextArg];
+                    nextArg++;
+                    List<Range> ranges = new List<Range>();
+                    while (args[nextArg] != ")") {
+                        int pi;
+                        Match M;
+                        Range range;
+                        if (false) { }
+                        else if ((M = Regex.Match(args[nextArg], "^((?<p>\\d+)|(?<a>\\d+)-|-(?<b>\\d+)|(?<a>\\d+)-(?<b>\\d+))(?<c>l|r|d|left|right|down)?$", RegexOptions.IgnoreCase)).Success) {
+                            if (M.Groups["p"].Success) {
+                                // 単一
+                                range = new Range {
+                                    first = Convert.ToInt32(M.Groups["p"].Value),
+                                    last = Convert.ToInt32(M.Groups["p"].Value),
+                                    rot = M.Groups["c"].Value,
+                                };
+                            }
+                            else {
+                                // 複数
+                                range = new Range {
+                                    first = M.Groups["a"].Success ? Convert.ToInt32(M.Groups["a"].Value) : 1,
+                                    last = M.Groups["b"].Success ? Convert.ToInt32(M.Groups["b"].Value) : int.MaxValue,
+                                    rot = M.Groups["c"].Value,
+                                };
+                            }
+                        }
+                        else if (int.TryParse(args[nextArg], out pi)) {
+                            range = new Range {
+                                first = pi,
+                                last = pi,
+                                rot = "",
+                            };
+                        }
+                        else {
+                            nextArg++;
+                            continue;
+                        }
+
+                        ranges.Add(range);
+                        nextArg++;
+                    }
+
+                    writer.AddRanges(ReaderFactory.Create(fpin), ranges);
+
+                    nextArg++; // ")"
+                }
+            }
+        }
+
         private static void helpYa() {
             Console.Error.WriteLine("pdftifgather out.pdf in1.pdf in2.pdf in3.pdf");
             Console.Error.WriteLine("pdftifgather out.pdf ( in-even.pdf 2 4 6 ) ( in-odd.pdf 1 3 5 )");
             Console.Error.WriteLine("pdftifgather out.tif ( in-even.tif 2 4 6 ) ( in-odd.tif 1 3 5 )");
-            Console.Error.WriteLine("pdftifgather out.tif ( in.tif 1L 1Left 1R 1Right 1D 1Down )");
+            Console.Error.WriteLine("pdftifgather       out.tif ( in.tif 1L 1Left 1R 1Right 1D 1Down )");
+            Console.Error.WriteLine("pdftifgather /v0.4 out.tif ( in.tif 1L 1Left 1R 1Right 1D 1Down )");
             Console.Error.WriteLine("pdftifgather out.tif ( in.tif 1- )");
             Console.Error.WriteLine("pdftifgather out.tif ( in.tif 2-3 )");
             Console.Error.WriteLine("pdftifgather out.tif ( in.tif 4- )");

@@ -1,4 +1,7 @@
 SET C=bin\x86\DEBUG\pdftifgather.exe
+
+%C% /v0.4 Outs\M.pdf ( Samples.pdf -1 2-2r 3d 4-l ) || PAUSE
+
 %C% Outs\0-t.tif ( Sample.tif 1 ) || PAUSE
 %C% Outs\90-t.tif ( Sample.tif 1right ) || PAUSE
 %C% Outs\180-t.tif ( Sample.tif 1down ) || PAUSE
