@@ -1,4 +1,4 @@
-; example2.nsi
+﻿; example2.nsi
 ;
 ; This script is based on example1.nsi, but it remember the directory, 
 ; has uninstall support and (optionally) installs start menu shortcuts.
@@ -7,9 +7,14 @@
 
 ;--------------------------------
 
+Unicode true
+
 !define APP "pdftifgather"
-!system 'DefineAsmVer.exe "bin\x86\DEBUG\${APP}.exe" "!define VER ""[SVER]"" " > Tmpver.nsh'
-!include "Tmpver.nsh"
+!system 'DefineAsmVer.exe "bin\x86\DEBUG\${APP}.exe" "!define VER ""[FVER]"" " > Appver.tmp'
+!include "Appver.tmp"
+
+!system 'MySign "bin\x86\DEBUG\${APP}.exe"'
+!finalize 'MySign "%1"'
 
 ; The name of the installer
 Name "${APP} ${VER}"
@@ -26,6 +31,8 @@ InstallDirRegKey HKLM "Software\${APP}" "Install_Dir"
 
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
+
+XPStyle on
 
 ;--------------------------------
 
@@ -76,6 +83,7 @@ Section "Uninstall"
   Delete "$INSTDIR\FreeImage.dll"
   Delete "$INSTDIR\FreeImageNET.dll"
   Delete "$INSTDIR\itextsharp.dll"
+  Delete "$INSTDIR\HiraokaHyperTools.itextsharp.dll"
   Delete "$INSTDIR\pdftifgather.exe"
   Delete "$INSTDIR\pdftifgather.exe.config"
   Delete "$INSTDIR\pdftoppm.exe"

@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pdftifgather", "pdftifgather\pdftifgather.csproj", "{C46D0207-930D-444A-A53C-E1BE49A8A160}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pdftifgather.tests", "pdftifgather.tests\pdftifgather.tests.csproj", "{99431E9C-1BFD-44AD-A496-ECA37E21F443}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,8 +17,15 @@ Global
 		{C46D0207-930D-444A-A53C-E1BE49A8A160}.Debug|x86.Build.0 = Debug|x86
 		{C46D0207-930D-444A-A53C-E1BE49A8A160}.Release|x86.ActiveCfg = Release|x86
 		{C46D0207-930D-444A-A53C-E1BE49A8A160}.Release|x86.Build.0 = Release|x86
+		{99431E9C-1BFD-44AD-A496-ECA37E21F443}.Debug|x86.ActiveCfg = Debug|x86
+		{99431E9C-1BFD-44AD-A496-ECA37E21F443}.Debug|x86.Build.0 = Debug|x86
+		{99431E9C-1BFD-44AD-A496-ECA37E21F443}.Release|x86.ActiveCfg = Release|Any CPU
+		{99431E9C-1BFD-44AD-A496-ECA37E21F443}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B31BDF34-879B-4446-BCB6-60B6060B4D3F}
 	EndGlobalSection
 EndGlobal
